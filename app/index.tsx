@@ -27,7 +27,7 @@ export default function App() {
 
           <Text style={styles.mini_text}>Where creativity meets innovation: embark on a journey of limitless exploration with Aora</Text>
           
-          <CustomButton title="Continue with Email" handlePress={() => router.push('./sign-in')}></CustomButton>
+          <CustomButton title="Continue with Email" handlePress={() => router.push('/sign-in')}></CustomButton>
 
           <StatusBar backgroundColor="#161622" style="light"></StatusBar>
         </View>
