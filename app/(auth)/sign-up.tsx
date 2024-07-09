@@ -7,12 +7,14 @@ import FormField from '@/components/FormField'
 import CustomButton from '@/components/CustomButton'
 
 import { Link, router } from 'expo-router'
-
 import { createUser } from '../../lib/appwrite.js'
+import { useGlobalContext } from '@/context/GlobalProvider.js'
 
 const SignUp = () => {
   const screenHeight = Dimensions.get('window').height;
   const minHeight = screenHeight * 0.85; // 85% of the screen height
+
+  const { setUser, setIsLoggedIn } = useGlobalContext()
 
   const [form, setForm] = useState({
     username: '',
@@ -25,14 +27,14 @@ const SignUp = () => {
   const submit = async () => {
     if (!form.username || !form.email || !form.password) {
       Alert.alert('Error', 'Please fill in all the fields')
-      
     }
 
     setIsSubmitting(true)
 
-
     try {
-      const result = await createUser(form.email, form.password, form.username) 
+      const result = await createUser(form.email, form.password, form.username)
+      setUser(result)
+      setIsLoggedIn(true)
       router.replace('/home')
       
     } catch (error) {

@@ -4,11 +4,11 @@ import { Redirect, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomButton from "@/components/CustomButton";
 import { images } from '../constants'
-export default function App() {
 
+export default function App() {
   const windowWidth = Dimensions.get('screen').width
   const windowHeight = Dimensions.get('screen').height
-
+  
   return (
     <SafeAreaView style={[styles.container, {height: windowHeight}]}>
       <ScrollView contentContainerStyle={{height:'100%'}}>
