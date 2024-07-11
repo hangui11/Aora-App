@@ -1,41 +1,50 @@
 import { View, Text, FlatList, StyleSheet, Image, RefreshControl } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { images } from '@/constants'
 import SearchInput from '@/components/SearchInput'
 import Trending from '@/components/Trending'
 import EmptyState from '@/components/EmptyState'
+import { getAllPosts, getLatestPosts } from '@/lib/appwrite' 
+import useAppwrite from '@/lib/useAppwrite'
+import VideoCard from '@/components/VideoCard'
+import { useGlobalContext } from '@/context/GlobalProvider'
 
 
 const Home = () => {
+  // Get data and rename it
+  const { data: posts, refetch } = useAppwrite(getAllPosts)
+  const { data: latestPosts } = useAppwrite(getLatestPosts)
+  // console.log(latestPosts)
+
+  const { user, setUser, setIsLoggedIn } = useGlobalContext()
 
   const [refreshing, setRefreshing] = useState(false)
 
   const onRefresh = async () => {
     setRefreshing(true)
-
+    await refetch()
     setRefreshing(false)
   }
 
   return (
     <SafeAreaView style={{backgroundColor:'#161622', height: '100%'}}>
       <FlatList
-        data={[{id: 1}, {id: 2}, {id: 3}]}
-        // data = {[]}
-        keyExtractor={(item) => item.id.toString()}
+        data={posts}
+        keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
-          <Text style={styles.text}>{item.id}</Text>
+          <VideoCard video={item}/>
         )}
         ListHeaderComponent={() => (
           <View style={styles.header}>
             <View style={styles.header_component}>
               <View>
                 <Text style={styles.welcome}>
-                  Welcome Back
+                  Welcome back 👋,
                 </Text>
                 <Text style={styles.name}>
-                  JSMatery
+                  { user?.username } 
                 </Text>
               </View>
 
@@ -54,8 +63,8 @@ const Home = () => {
               <Text style={{color: '#CDCDE0', marginBottom: 18, fontFamily: 'Poppins-Regular', fontSize: 18, lineHeight: 28}}>
                 Latest Videos
               </Text>
-
-              <Trending posts={[{id: 1}, {id: 2}, {id: 3}] ?? []}/>
+              {/* If is not defined or null, it will return []  */}
+              <Trending posts={latestPosts ?? []}/>
             </View>
           </View>
         )}
@@ -63,7 +72,7 @@ const Home = () => {
         ListEmptyComponent={() => (
           <EmptyState title="No Videos Found" subtitle="Be the first one to upload the video"/>
         )}
-        refreshControl={<RefreshControl></RefreshControl>}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}
       />
     </SafeAreaView>
   )
@@ -91,8 +100,7 @@ const styles = StyleSheet.create({
 
   welcome: {
     fontFamily: 'Poppins-Medium',
-    fontSize: 12,
-    lineHeight: 16,
+    fontSize: 14,
     color: '#CDCDE0'
   },
 
