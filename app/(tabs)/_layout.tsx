@@ -48,7 +48,7 @@ const TabsLayout = () => {
             title:'BOOKMARK', 
             headerShown: false, 
             tabBarIcon: ( {color, focused}) => (
-              <TabIcon icon={icons.home} color={color} name="BOOKMARK" focused={focused}/>)
+              <TabIcon icon={icons.bookmark} color={color} name="BOOKMARK" focused={focused}/>)
           }}>
         </Tabs.Screen>  
 
@@ -66,7 +66,7 @@ const TabsLayout = () => {
             title:'CREATE', 
             headerShown: false, 
             tabBarIcon: ( {color, focused}) => (
-              <TabIcon icon={icons.home} color={color} name="CREATE" focused={focused}/>)
+              <TabIcon icon={icons.plus} color={color} name="CREATE" focused={focused}/>)
           }}>
         </Tabs.Screen>
 
