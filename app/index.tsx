@@ -4,15 +4,43 @@ import { Redirect, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomButton from "@/components/CustomButton";
 import { images } from '../constants'
+import * as Device from 'expo-device'
+import { useEffect, useState } from "react";
 
 export default function App() {
   const windowWidth = Dimensions.get('screen').width
   const windowHeight = Dimensions.get('screen').height
-  
+  const [deviceName, setDeviceName] = useState('');
+
+  useEffect(() => {
+    const getDeviceName = async () => {
+      try {
+        let device = Device.osName
+        console.log(device);
+        setDeviceName(device);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    getDeviceName();
+  }, []);
   return (
     <SafeAreaView style={[styles.container, {height: windowHeight}]}>
       <ScrollView contentContainerStyle={{height:'100%'}}>
         <View style={[styles.view]}>
+          {deviceName === 'Android' || deviceName === 'iOS' ? (
+            <View>
+              <Text style={{color:'white'}}>This is a mobile</Text>
+            </View>
+          ) : (
+            <View>
+              <Text style={{color:'white'}}>This is a desktop</Text>
+            </View>
+          )}
+
+
+
 
           <Image source={images.logo} style={styles.logo} resizeMode="contain"/>
           <Image source={images.cards} style={styles.card}/>
