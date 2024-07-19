@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Modal, Text, View, ScrollView, Dimensions, Image } from "react-native";
-import { Redirect, router } from "expo-router";
+import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomButton from "@/components/CustomButton";
 import { images } from '../constants'
@@ -11,39 +11,35 @@ export default function App() {
   const windowWidth = Dimensions.get('screen').width
   const windowHeight = Dimensions.get('screen').height
   const [deviceName, setDeviceName] = useState('');
-
+  const [isMobile, setIsMobile] = useState(false)
+  
   useEffect(() => {
     const getDeviceName = async () => {
       try {
         let device = Device.osName
         console.log(device);
+        if (device == 'Android' || device == "iOS") setIsMobile(true)
         setDeviceName(device);
       } catch (error) {
         console.error(error);
       }
     };
-
     getDeviceName();
   }, []);
+
+
   return (
     <SafeAreaView style={[styles.container, {height: windowHeight}]}>
       <ScrollView contentContainerStyle={{height:'100%'}}>
         <View style={[styles.view]}>
-          {deviceName === 'Android' || deviceName === 'iOS' ? (
-            <View>
-              <Text style={{color:'white'}}>This is a mobile</Text>
-            </View>
-          ) : (
-            <View>
-              <Text style={{color:'white'}}>This is a desktop</Text>
-            </View>
-          )}
-
-
-
-
           <Image source={images.logo} style={styles.logo} resizeMode="contain"/>
-          <Image source={images.cards} style={styles.card}/>
+          { isMobile ? (
+            <Image source={images.cards} style={styles.card}/>
+          ) : (
+            <Image source={images.profile} style={[styles.card, {borderRadius: 50}]}/>
+          )
+          }
+          
 
           <View style={{marginTop: 24, position:'relative'}}>
             <Text style={styles.text}>Discover Endless Possibilites with { ' '} 
@@ -59,6 +55,15 @@ export default function App() {
 
           <StatusBar backgroundColor="#161622" style="light"></StatusBar>
         </View>
+        {isMobile ? (
+            <View style={{alignItems: 'center'}}>
+              <Text style={{color:'white'}}>THIS IS A MOBILE DEVICE</Text>
+            </View>
+          ) : (
+            <View style={{alignItems: 'center'}}>
+              <Text style={{color:'white'}}>THIS IS A DESKTOP DEVICE</Text>
+            </View>
+          )}
         
       </ScrollView>
     </SafeAreaView>
@@ -104,7 +109,7 @@ const styles = StyleSheet.create({
   path: {
     height: 15,
     width: 200,
-    bottom: 340,
+    bottom: 235,
     right: -26,
     position: 'absolute'
   },
